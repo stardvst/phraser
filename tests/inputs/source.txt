@@ -1,9 +1,0 @@
-/* PROGRAM NAME: nxx1.txt
-
-nxx is a simple programming language that provides:
- numbers
- strings
- assignment statements
- string concatenation
- simple arithmetic operations
- print capability

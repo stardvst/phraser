@@ -3,31 +3,26 @@
 import unittest
 
 from phraser.scanner import Scanner
-from phraser.scanner import ENDMARK
 
 
 class TestScanner(unittest.TestCase):
 
-    def setUp(self):
-        self.file = open("tests/inputs/source.txt", "r")
+    def test_space(self):
+        self.assert_scan_result(" ", "     0   0      space")
 
-    def tearDown(self):
-        self.file.close()
+    def test_newline(self):
+        self.assert_scan_result("\n", "     0   0      newline")
 
-    def test_source(self):
-        # get source text from file
-        source = self.file.read()
+    def test_tab(self):
+        self.assert_scan_result("\t", "     0   0      tab")
+
+    def test_eof(self):
+        self.assert_scan_result("\0", "     0   0      eof")
+
+    def test_char(self):
+        self.assert_scan_result("a", "     0   0   a")
+
+    # generic helper method
+    def assert_scan_result(self, source, output):
         scanner = Scanner(source)
-
-        # get characters from scanner
-        import io
-        out = io.StringIO()
-        character = scanner.get()
-        while True:
-            if character.char == ENDMARK:
-                break
-            out.write(repr(character))
-            character = scanner.get()
-
-        # compare!
-        self.assertEqual(source, out.getvalue())
+        self.assertEqual(str(scanner.get()), output)
