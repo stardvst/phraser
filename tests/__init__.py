@@ -1,8 +1,9 @@
 import unittest
 
 from tests.test_scanner import TestScanner
+from tests.test_lexer import TestLexer
 
-test_cases = (TestScanner, )
+test_cases = (TestScanner, TestLexer)
 
 
 def load_tests(loader, tests, pattern):

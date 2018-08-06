@@ -67,6 +67,7 @@ WHITESPACE_CHARS = " \t\n"
 ########################################################################
 # Token types for things other than keywords and symbols
 ########################################################################
+KEYWORD = 'Keyword'
 STRING = "String"
 IDENTIFIER = "Identifier"
 NUMBER = "Number"
@@ -131,7 +132,7 @@ class Lexer:
                 self.get_char()  # read past 2nd char of 2-char token
 
                 # only if we want lexer to return comments
-                # return token
+                return token
 
         #######################################################################
         # process other tokens
@@ -154,12 +155,12 @@ class Lexer:
 
             # keyword token
             if token.value in Keywords:
-                token.type = token.value
+                token.type = KEYWORD
 
             return token
 
         # number token
-        if self.c1 in NUMBER_CHARS:
+        if self.c1 in NUMBER_STARTCHARS:
             token.type = NUMBER
             self.get_char()
 
@@ -211,3 +212,12 @@ class Lexer:
         self.character = self.scanner.get()
         self.c1 = self.character.char
         self.c2 = self.c1 + self.scanner.lookahead(1)
+
+    def get_list(self):
+        tokens = []
+        while True:
+            token = self.get()
+            tokens.append(token.type + "(" + token.value + ")")
+            if token.type == EOF:
+                break
+        return tokens
