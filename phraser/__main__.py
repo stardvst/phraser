@@ -3,9 +3,8 @@
 import sys
 import os
 
-from phraser.scanner import Scanner
-from phraser.scanner import ENDMARK
-
+from phraser.lexer import Lexer
+from phraser.lexer import EOF
 
 ########################################################################
 # support for writing to output file
@@ -23,16 +22,14 @@ def main(source):
     global f
     with open(output_file, "w") as f:
 
-        print("Here are the characters returned by the scanner", end='\n')
-        print("   line col character", end='\n')
+        print("Here are the characters returned by the lexer:", end='\n')
 
-        scanner = Scanner(source)
-        character = scanner.get()
+        lexer = Lexer(source)
         while True:
-            writeln(character)
-            if character.char == ENDMARK:
+            token = lexer.get()
+            writeln(token.show(show_line_numbers=True))
+            if token.type == EOF:
                 break
-            character = scanner.get()
 
 
 ########################################################################

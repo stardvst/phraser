@@ -92,7 +92,7 @@ class Scanner:
         Return a string at position current index + offset in source.
             :param offset: offset of requested character from current index.
         """
-        if self.current_index > self.last_index:
+        if self.current_index + 1 > self.last_index:
             return ENDMARK
 
         return self.source[self.current_index + offset]
