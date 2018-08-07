@@ -58,7 +58,7 @@ class Token:
     def abort(self, msg):
         """
         Given a message, construct error string based on its position.
-            :param msg: error message to print 
+            :param msg: error message to print
         """
         lines = self.source.split("\n")
         current_line = lines[self.line_index]

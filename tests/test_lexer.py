@@ -3,6 +3,7 @@
 import unittest
 
 from phraser.lexer import Lexer
+from phraser.token import LexerError
 
 
 class TestLexer(unittest.TestCase):
@@ -13,6 +14,18 @@ class TestLexer(unittest.TestCase):
     def test_comment(self):
         self.assert_scan_result("/* = false */", ['Comment(/* = false */)',
                                                   'Eof(\x00)'])
+
+    def test_comment_negative(self):
+        # check that the exception is risen
+        with self.assertRaises(LexerError) as ex:
+            lexer = Lexer("/* endless comment")
+            lexer.get_list()
+
+        # check the exception message
+        self.assertEqual(
+            ex.exception.args[0],
+            "\nIn line 1, column 1:\n/* endless comment\n^\nFound EOF before"
+            " end of comment")
 
     def test_eof(self):
         self.assert_scan_result("\0", ['Eof(\x00)'])
@@ -41,13 +54,25 @@ class TestLexer(unittest.TestCase):
 
     def test_number(self):
         self.assert_scan_result("2 10 177", ['Number(2)',
-                                               'Number(10)',
-                                               'Number(177)',
-                                               'Eof(\x00)'])
+                                             'Number(10)',
+                                             'Number(177)',
+                                             'Eof(\x00)'])
 
     def test_string(self):
         self.assert_scan_result("\"a string\"", ['String("a string")',
                                                  'Eof(\x00)'])
+
+    def test_string_negative(self):
+        # check that the exception is risen
+        with self.assertRaises(LexerError) as ex:
+            lexer = Lexer("\"endless string")
+            lexer.get_list()
+
+        # check the exception message
+        self.assertEqual(
+            ex.exception.args[0],
+            "\nIn line 1, column 1:\n\"endless string\n^\nFound EOF before"
+            " end of string literal")
 
     def test_twochar_symbol(self):
         self.assert_scan_result("== <= >= <> != ++ ** -- += -= ||",
@@ -81,6 +106,20 @@ class TestLexer(unittest.TestCase):
                                  ';(;)',
                                  'Eof(\x00)'
                                  ])
+
+    def test_unknown(self):
+        char = "^"
+
+        # check that the exception is risen
+        with self.assertRaises(LexerError) as ex:
+            lexer = Lexer(char)
+            lexer.get_list()
+
+        # check the exception message
+        self.assertEqual(
+            ex.exception.args[0],
+            "\nIn line 1, column 1:\n^\n^\nFound unknown character or"
+            " symbol: \"{0}\"".format(char))
 
     # generic helper method
     def assert_scan_result(self, source, output):
