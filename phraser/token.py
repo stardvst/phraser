@@ -25,35 +25,11 @@ class Token:
         # we don't know the type until we;ve processed all characters in token.
         self.type = None
 
-    def show(self, show_line_numbers=False, **kwargs):
+    def __str__(self):
         """
         Return printable string representation of an object.
-            :param show_line_numbers: show line numbers.
-            :param align: show token type left justified with dot leaders.
         """
-        tokenTypeLen = 0
-        space = ""
-
-        align = kwargs.get("align", True)
-        if align:
-            tokenTypeLen = 12
-            space = " "
-
-        s = ""
-        if show_line_numbers:
-            s = str(self.line_index).rjust(6) + \
-                str(self.column_index).rjust(4) + " "
-
-        if self.type == self.value:
-            s = s + "Symbol".ljust(tokenTypeLen, ".") + ":" + space + self.type
-        elif self.type == "Whitespace":
-            s = s + "Whitespace".ljust(tokenTypeLen, ".") + ":" + space + \
-                repr(self.value)
-        else:
-            s = s + self.type.ljust(tokenTypeLen, ".") + ":" + space + \
-                self.value
-
-        return s
+        return self.type + "(" + self.value + ")"
 
     def abort(self, msg):
         """
@@ -70,6 +46,3 @@ class Token:
                          "^\n" +
                          msg
                          )
-
-    def __repr__(self):
-        return self.value

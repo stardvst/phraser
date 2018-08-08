@@ -217,7 +217,7 @@ class Lexer:
         tokens = []
         while True:
             token = self.get()
-            tokens.append(token.type + "(" + token.value + ")")
+            tokens.append(str(token))
             if token.type == EOF:
                 break
         return tokens
