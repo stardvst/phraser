@@ -6,6 +6,7 @@ import os
 from phraser.lexer import Lexer
 from phraser.lexer import EOF
 
+
 ########################################################################
 # support for writing to output file
 ########################################################################

@@ -45,9 +45,6 @@ class Character:
             char
         )
 
-    def __repr__(self):
-        return self.char
-
 
 class Scanner:
     """
