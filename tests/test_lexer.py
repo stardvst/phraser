@@ -2,8 +2,8 @@
 
 import unittest
 
-from phraser.lexer import Lexer
 from phraser.token import LexerError
+import phraser.lexer as lexer
 
 
 class TestLexer(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestLexer(unittest.TestCase):
     def test_comment_negative(self):
         # check that the exception is risen
         with self.assertRaises(LexerError) as ex:
-            lexer = Lexer("/* endless comment")
+            lexer.initialize("/* endless comment")
             lexer.get_list()
 
         # check the exception message
@@ -65,7 +65,7 @@ class TestLexer(unittest.TestCase):
     def test_string_negative(self):
         # check that the exception is risen
         with self.assertRaises(LexerError) as ex:
-            lexer = Lexer("\"endless string")
+            lexer.initialize("\"endless string")
             lexer.get_list()
 
         # check the exception message
@@ -112,7 +112,7 @@ class TestLexer(unittest.TestCase):
 
         # check that the exception is risen
         with self.assertRaises(LexerError) as ex:
-            lexer = Lexer(char)
+            lexer.initialize(char)
             lexer.get_list()
 
         # check the exception message
@@ -123,5 +123,5 @@ class TestLexer(unittest.TestCase):
 
     # generic helper method
     def assert_scan_result(self, source, output):
-        lexer = Lexer(source)
+        lexer.initialize(source)
         self.assertEqual(lexer.get_list(), output)

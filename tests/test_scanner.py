@@ -2,7 +2,7 @@
 
 import unittest
 
-from phraser.scanner import Scanner
+import phraser.scanner as scanner
 
 
 class TestScanner(unittest.TestCase):
@@ -23,7 +23,7 @@ class TestScanner(unittest.TestCase):
         self.assert_scan_result("a", "     0   0   a")
 
     def test_multiline(self):
-        scanner = Scanner("a\nb")
+        scanner.initialize("a\nb")
         chars = []
         chars.append(str(scanner.get()))
         scanner.get()
@@ -32,5 +32,5 @@ class TestScanner(unittest.TestCase):
 
     # generic helper method
     def assert_scan_result(self, source, output):
-        scanner = Scanner(source)
+        scanner.initialize(source)
         self.assertEqual(str(scanner.get()), output)

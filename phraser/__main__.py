@@ -3,9 +3,8 @@
 import sys
 import os
 
-from phraser.lexer import Lexer
-
 import phraser.symbols as symbols
+import phraser.lexer as lexer
 
 
 ########################################################################
@@ -26,7 +25,7 @@ def main(source):
 
         print("Here are the characters returned by the lexer:", end='\n')
 
-        lexer = Lexer(source)
+        lexer.initialize(source)
         while True:
             token = lexer.get()
             writeln(str(token))

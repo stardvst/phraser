@@ -46,50 +46,51 @@ class Character:
         )
 
 
-class Scanner:
+########################################################################
+# The scanner reads through source and returns one character at a time.
+########################################################################
+def initialize(text):
     """
-    The scanner class.
-    It reads through source and returns one character at a time.
+    Initialize the scanner.
+        :param source: the entire source text
     """
+    global source, last_index, current_index, line, column
+    source = text
+    last_index = len(source) - 1
+    current_index = -1
+    line = 0
+    column = -1
 
-    def __init__(self, source):
-        """
-        Initialize the scanner.
-            :param source: the entire source text
-        """
-        self.source = source
-        self.last_index = len(source) - 1
-        self.current_index = -1
-        self.line = 0
-        self.column = -1
 
-    def get(self):
-        """
-        Return the next character.
-        """
-        self.current_index += 1
+def get():
+    """
+    Return the next character.
+    """
+    global last_index, current_index, line, column
 
-        if self.current_index > 0 and \
-                self.source[self.current_index - 1] == "\n":
-            self.line += 1
-            self.column = -1
+    current_index += 1
 
-        self.column += 1
+    if current_index > 0 and source[current_index - 1] == "\n":
+        line += 1
+        column = -1
 
-        if self.current_index > self.last_index:
-            char = ENDMARK
-        else:
-            char = self.source[self.current_index]
+    column += 1
 
-        return Character(char, self.line, self.current_index,
-                         self.column, self.source)
+    if current_index > last_index:
+        char = ENDMARK
+    else:
+        char = source[current_index]
 
-    def lookahead(self, offset=1):
-        """
-        Return a string at position current index + offset in source.
-            :param offset: offset of requested character from current index.
-        """
-        if self.current_index + 1 > self.last_index:
-            return ENDMARK
+    return Character(char, line, current_index, column, source)
 
-        return self.source[self.current_index + offset]
+
+def lookahead(offset=1):
+    """
+    Return a string at position current index + offset in source.
+        :param offset: offset of requested character from current index.
+    """
+    global source, current_index, last_index
+    if current_index + 1 > last_index:
+        return ENDMARK
+
+    return source[current_index + offset]
