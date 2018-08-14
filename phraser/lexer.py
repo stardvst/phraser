@@ -1,79 +1,10 @@
 """ The lexer module. """
 
-import string
-
 from phraser.scanner import Scanner
 from phraser.scanner import ENDMARK
 from phraser.token import Token
 
-########################################################################
-# list of keywords
-########################################################################
-Keywords = """
-if
-then
-else
-elif
-endif
-while
-loop
-endloop
-print
-return
-exit
-"""
-Keywords = Keywords.split()
-
-########################################################################
-# list of symbols that are one character long
-########################################################################
-OneCharacterSymbols = """
-=
-( )
-< >
-/ * + -
-\\ &
-. ;
-"""
-OneCharacterSymbols = OneCharacterSymbols.split()
-
-########################################################################
-# list of symbols that are two character long
-########################################################################
-TwoCharacterSymbols = """
-==
-<=
->=
-<>
-!=
-++
-**
---
-+=
--=
-||
-"""
-TwoCharacterSymbols = TwoCharacterSymbols.split()
-
-IDENTIFIER_STARTCHARS = string.ascii_letters
-IDENTIFIER_CHARS = string.ascii_letters + string.digits + "_"
-
-NUMBER_STARTCHARS = string.digits
-NUMBER_CHARS = string.digits + "."
-
-STRING_STARTCHARS = "'" + '"'
-WHITESPACE_CHARS = " \t\n"
-
-########################################################################
-# Token types for things other than keywords and symbols
-########################################################################
-KEYWORD = 'Keyword'
-STRING = "String"
-IDENTIFIER = "Identifier"
-NUMBER = "Number"
-WHITESPACE = "Whitespace"
-COMMENT = "Comment"
-EOF = "Eof"
+import phraser.symbols as symbols
 
 
 class Lexer:
@@ -100,12 +31,12 @@ class Lexer:
         #######################################################################
         # process whitespaces and comments
         #######################################################################
-        while self.c1 in WHITESPACE_CHARS or self.c2 == "/*":
+        while self.c1 in symbols.WHITESPACE_CHARS or self.c2 == "/*":
 
             # process whitespace
-            while self.c1 in WHITESPACE_CHARS:
+            while self.c1 in symbols.WHITESPACE_CHARS:
                 token = Token(self.character)
-                token.type = WHITESPACE
+                token.type = symbols.WHITESPACE
                 self.get_char()
 
                 # only if we want lexer to return whitespace
@@ -114,7 +45,7 @@ class Lexer:
             # process comments
             while self.c2 == "/*":
                 token = Token(self.character)
-                token.type = COMMENT
+                token.type = symbols.COMMENT
                 token.value = self.c2
 
                 self.get_char()  # read past 1st char of 2-char token
@@ -141,37 +72,37 @@ class Lexer:
 
         # EOF token
         if self.c1 == ENDMARK:
-            token.type = EOF
+            token.type = symbols.EOF
             return token
 
         # identifier token
-        if self.c1 in IDENTIFIER_STARTCHARS:
-            token.type = IDENTIFIER
+        if self.c1 in symbols.IDENTIFIER_STARTCHARS:
+            token.type = symbols.IDENTIFIER
             self.get_char()
 
-            while self.c1 in IDENTIFIER_CHARS:
+            while self.c1 in symbols.IDENTIFIER_CHARS:
                 token.value += self.c1
                 self.get_char()
 
             # keyword token
-            if token.value in Keywords:
-                token.type = KEYWORD
+            if token.value in symbols.Keywords:
+                token.type = symbols.KEYWORD
 
             return token
 
         # number token
-        if self.c1 in NUMBER_STARTCHARS:
-            token.type = NUMBER
+        if self.c1 in symbols.NUMBER_STARTCHARS:
+            token.type = symbols.NUMBER
             self.get_char()
 
-            while self.c1 in NUMBER_CHARS:
+            while self.c1 in symbols.NUMBER_CHARS:
                 token.value += self.c1
                 self.get_char()
 
             return token
 
         # string token
-        if self.c1 in STRING_STARTCHARS:
+        if self.c1 in symbols.STRING_STARTCHARS:
             # remember so we can look for it in the end
             quote_char = self.c1
 
@@ -185,18 +116,18 @@ class Lexer:
                 self.get_char()
 
             token.value += self.c1  # append close quote
-            token.type = STRING
+            token.type = symbols.STRING
             self.get_char()
             return token
 
-        if self.c2 in TwoCharacterSymbols:
+        if self.c2 in symbols.TwoCharacterSymbols:
             token.value = self.c2
             token.type = token.value  # for symbols token is same as value
             self.get_char()  # read past 1st char of 2-char token
             self.get_char()  # read past 2nd char of 2-char token
             return token
 
-        if self.c1 in OneCharacterSymbols:
+        if self.c1 in symbols.OneCharacterSymbols:
             token.type = token.value  # for symbols token is same as value
             self.get_char()  # read past 1st char of 1-char token
             return token
@@ -218,6 +149,6 @@ class Lexer:
         while True:
             token = self.get()
             tokens.append(str(token))
-            if token.type == EOF:
+            if token.type == symbols.EOF:
                 break
         return tokens

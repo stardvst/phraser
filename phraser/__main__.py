@@ -4,7 +4,8 @@ import sys
 import os
 
 from phraser.lexer import Lexer
-from phraser.lexer import EOF
+
+import phraser.symbols as symbols
 
 
 ########################################################################
@@ -28,8 +29,8 @@ def main(source):
         lexer = Lexer(source)
         while True:
             token = lexer.get()
-            writeln(token.show(show_line_numbers=True))
-            if token.type == EOF:
+            writeln(str(token))
+            if token.type == symbols.EOF:
                 break
 
 
