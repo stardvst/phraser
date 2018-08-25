@@ -5,6 +5,7 @@ import os
 
 import phraser.symbols as symbols
 import phraser.lexer as lexer
+import phraser.parser as parser
 
 
 ########################################################################
@@ -21,16 +22,14 @@ def writeln(*args):
 ########################################################################
 def main(source):
     global f
+
+    ast = parser.parse(source, verbose=True)
+    print("~" * 80)
+    print("Here is the abstract syntax tree:")
+    print("~" * 80)
+
     with open(output_file, "w") as f:
-
-        print("Here are the characters returned by the lexer:", end='\n')
-
-        lexer.initialize(source)
-        while True:
-            token = lexer.get()
-            writeln(str(token))
-            if token.type == symbols.EOF:
-                break
+        f.write(ast.to_string())
 
 
 ########################################################################
